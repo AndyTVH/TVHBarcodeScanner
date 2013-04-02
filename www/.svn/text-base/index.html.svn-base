@@ -1,0 +1,925 @@
+<!-- als je op een nieuw toestel gaat installeren, niet vergeten om debugging te enabelen op het toestel (developer options) -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile.structure-1.3.0.css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile.theme-1.3.0.css"/>
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile.theme-1.3.0.tvh.css"/>
+<link rel="stylesheet" type="text/css" href="css/custom.css"/>
+<!-- how will this css file influence the application on smaller/bigger sized screens -->
+<!-- <link rel="stylesheet" type="text/css" href="css/screen.css"/> --> 
+<link rel="stylesheet" type="text/css" href="css/scrollbar.css"/>
+<title>TVH barcodescanner</title>
+<script type="text/javascript" src="js/cordova.js"></script>
+<script type="text/javascript" src="js/barcodescanner.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-migrate-1.1.1.js"></script>
+<script type="text/javascript" src="js/jquery.mobile-1.3.0.min.js"></script>
+<script type="text/javascript" src="js/jquery.swipeButton.js"></script>
+<script type="text/javascript" src="js/jquery.i18n.properties-1.0.9.js"></script>
+<script type="text/javascript" src="js/jquery.mobile.simpledialog2.min.js"></script>
+<script type="text/javascript" src="js/iscroll.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/maincode.js" ></script>
+</head>
+<body>
+	<div data-role="page" id="main" data-position="fixed">
+		<div id="tvh-homeheader">
+			<h1><img src="img/TVHlogo.png" alt="logo"></h1>
+			<p id="header_main"></p>
+				<p class="intro">
+					<span><label id="greetingP1"></label></span>
+					<label id="greetingP2" style="display:inline;"></label> 
+					<a target="_blank" href="http://www.tvh.com" id="greetingP3"></a> 
+					<label id="greetingP4" style="display:inline;"></label>
+				</p>
+		</div>
+		<div data-role="content">
+		</div>
+		<div data-role="footer"  data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" class="ui-state-persist" data-icon="home" ><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" ><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" ><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" ><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- Hoofdpagina -->
+	
+	<div data-role="page" id="mylists" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_mylists"></h1>
+			<a href="#nieuweLijst" data-icon="plus" class="ui-btn-right" data-theme="e" id="btn_NewList"></a>
+		</div>
+		<div data-role="content">
+			<div id="wrapper2" class="wrapper">
+				<div id="scroller2" class="scroller">
+					<ul data-role="listview" id="lstvw_Lists" class="addDeleteBtn listWithComment"></ul>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" ><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" class="ui-state-persist" data-icon="grid" ><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" ><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>		
+	</div> <!-- overzicht van mijn lijsten -->
+
+	<div data-role="page" id="detailsVanLijst" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="lijsttitel"></h1>
+			<a data-role="button" id="btn_ScanIntoList" data-icon="plus" class="ui-btn-right" data-theme="e"></a>
+				<div data-role="navbar">
+					<ul>
+						<li><a data-role="button" id="btn_RemoveList" data-theme="c" data-inline="true" ></a></li>
+						<li><a data-role="button" id="btn_SendList" data-theme="c" data-inline="true"></a> </li>
+					</ul>
+				</div>
+		</div>
+		<div data-role="content">
+			<div id="wrapper3" >
+				<div id="scroller3" >
+					<ul data-role="listview" id="lstvw_ListDetails"></ul>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-id="mainBar" data-tap-toggle="false" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>		
+	</div> <!-- overzicht van de detaillijnen van de lijsten -->
+
+	<div data-role="page" id="detailInfo" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_detail"></h1>
+		</div>
+		<div id="wrapper4">
+			<div data-role="content" id="scroller4">
+				<table id="detailinfo"></table>
+				
+				<ul data-role="listview" data-inset="true">
+					<li>
+						<a id="btn_UpdateDetail" ></a>
+					</li>
+					<li>
+						<a id="btn_DeleteDetail"></a>
+					</li>
+					<li>
+						<a id="btn_ExportDetail"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">  
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>		
+	</div><!-- detail van een detaillijn -->
+	
+	
+	<div data-role="page" id="nieuweLijst" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_NewList"></h1>
+			<a href="#" data-icon="check" class="ui-btn-right" data-theme="e" id="btn_CreateNewList"></a>
+		</div>
+		<div data-role="content">
+			<div>
+				<div data-role="fieldcontain">
+					<form onsubmit="nieuwelijstsubmit(event)" data-ajax="false">
+						<label for="txt_ListName" id="lbl_ListName"></label>
+						<input type="text" name="txt_ListName" id="txt_ListName" />
+					</form>
+					<div data-role="popup" data-theme="a" class="ui-content" id="popup_NewList">
+						<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+					</div>
+					<div data-role="popup" data-theme = "a" class="ui-content" id="popup_ListExists">
+						<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+					</div>					
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-id="mainBar" data-tap-toggle="false">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- nieuwe lijst maken -->
+	
+	<div data-role="page" id="scankeuze" data-position="fixed">
+		<div data-role="content" >
+			<a id="btn_ScanButton" data-role="button" onclick="app.scan()">Ingebouwde camera</a>
+		</div>
+	</div> <!-- dient puur om de scan knop te kunnen laten triggeren, deze pagina heeft verder geen enkele functionaliteit -->
+
+	<div data-role="page" id="scan" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_Scan"></h1>
+			<a data-role="button" id="btn_NewDetail" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<form data-ajax="false" onsubmit="naarAantalKnop(event)">
+				<div data-role="fieldcontain">
+					<label for="txt_ScannedCode" id="lbl_ScanBarcode"></label> 
+					<input type="text" name="txt_ScannedCode" id="txt_ScannedCode" value="" />
+				</div>
+			</form>
+			<form onsubmit="nieuwListDetailSubmit(event)" data-ajax="false" >
+				<div data-role="fieldcontain">
+					<label for="txt_ScannedAmount" id="lbl_ScanAmount"></label> 
+					<input type="number" name="txt_ScannedAmount" id="txt_ScannedAmount" value="1" />
+				</div>
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_DetailEmpty">
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div>
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_DetailNotValid">
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div>
+			</form>
+		</div>
+		<div data-role="footer" data-position="fixed" data-id="mainBar" data-tap-toggle="false">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="icon" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- nieuwe item toevoegen = scannen -->
+
+	<div data-role="page" id="lijstdetailaanpassen" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_UpdateDetail"></h1>
+			<a data-role="button" id="btn_UpdateDetailConfirm" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content" >
+			<!-- data ajax zorgt ervoor dat na de submit de pagina correct doorlaadt -->
+			<form onsubmit="updateListDetailBarcodeSubmit(event)" data-ajax="false" >
+				<div data-role="fieldcontain">
+					<label for="txt_BarcodeUpdated" id="lbl_barcodeupdate"></label> 
+					<input type="text" name="txt_BarcodeUpdated" id="txt_BarcodeUpdated" readonly="readonly" />
+				</div>
+			</form>
+			<form onsubmit="updateListDetailAantal(event)" data-ajax="false">
+				<div data-role="fieldcontain">
+					<label for="txt_AmountUpdated" id="lbl_UpdateAmount"></label> 
+					<input type="number" name="txt_AmountUpdated" id="txt_AmountUpdated" />
+				</div>
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_Update">
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div>
+			</form>
+		</div>
+		<div data-role="footer" data-tap-toggle="false" data-position="fixed" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- lijstdetail aanpassen -->
+	
+	<div data-role="page" id="tvhcodeinvoer" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_InsertTVHCode"></h1>
+			<a data-role="button" data-icon="check" id="btn_NewDetailEntry" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<form data-ajax="false" onsubmit="makeIngevuld(event)">
+				<div data-role="fieldcontain">
+					<label for="slct_MakeInsert" id="lbl_MakeSelect"></label>
+					<select name="slct_MakeInsert" id="slct_MakeInsert" data-theme="c">
+					</select>
+				</div>
+			</form>
+			<form data-ajax="false" onsubmit="partnumberIngevuld(event)">
+				<div data-role="fieldcontain">
+					<label for="txt_TVHCodeInsert" id="lbl_CodeInsert"></label>
+					<input type="text" name="txt_TVHCodeInsert" id="txt_TVHCodeInsert" value=""/>
+				</div>
+			</form>
+			<form data-ajax="false" onsubmit="partnumberIngevuldSubmit(event)">
+				<div data-role="fieldcontain">
+					<label for="txt_TVHCodeAmount" id="lbl_CodeAmount"></label>
+					<input type="number" name="txt_TVHCodeAmount" id="txt_TVHCodeAmount" value=""/>
+				</div>
+			</form>
+		</div>
+		<div data-role="popup" data-theme="a" class="ui-content" id="popup_CodeEmpty">
+			<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		</div>
+		<div data-role="popup" data-theme="a" class="ui-content" id="popup_CodeNotValid">
+			<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		</div>
+		<div data-role="popup" data-theme="a" class="ui-content" id="popup_CodeFail">
+			<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		</div>
+		<div data-role="footer" data-tap-toggle="false" data-position="fixed" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div> 
+	</div><!-- invoeren van nieuw item in lijst mbv tvhcode -->
+	
+	<div data-role="page" id="nieuwItem" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_NewItem"></h1>
+			<a data-role="button" id="btn_NewItemFromSAYG" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content" >
+				<div data-role="fieldcontain">
+					<label for="txt_BarcodeInsert" id="lbl_barcodeinsert"></label>
+					<input type="number" name="txt_BarcodeInsert" id="txt_BarcodeInsert" />
+					<form data-ajax="false" onsubmit="makeSubmit(event)"> 
+						<label for="slct_Make" id="lbl_makeinsert"></label>
+						<select name="slct_Make" id="slct_Make" data-theme="c">
+						</select>
+					</form>
+					<form data-ajax="false" onsubmit="partnumberSubmit(event)">
+						<label for="txt_PartnumberInsert" id="lbl_partnumberinsert"></label>
+						<input type="text" name="txt_PartnumberInsert" id="txt_PartnumberInsert"/>
+					</form>
+					<form data-ajax="false" onsubmit="customerrefSubmit(event)">
+						<label for="txt_CustomerRefInsert" id="lbl_customerrefinsert"></label>
+						<input type="text" name="txt_CustomerRefInsert" id="txt_CustomerRefInsert"/>
+					</form>
+				</div>
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_Make" >
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div> 
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_Partnumber" >
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div>
+		</div>
+		<div data-role="footer" data-tap-toggle="false" data-position="fixed" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- barcode bestaat niet in database, tijd om in te voegen -->
+	
+	<div data-role="page" id="itemUpdate" data-position="fixed" >
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_itemupdate"></h1>
+			<a data-role="button" data-icon="check" class="ui-btn-right" data-theme="e" id="btn_UpdateItem"></a>
+		</div>
+		<div data-role="content" >
+			<div data-role="fieldcontain">
+				<form data-ajax="false">
+					<label for="txt_BarcodeItemUpdate" id="lbl_barcodeitemupdate"></label>
+					<input type="number" name="txt_BarcodeItemUpdate" id="txt_BarcodeItemUpdate" readonly="readonly" />
+				</form>
+				<form data-ajax="false" onsubmit="makeupdate(event)">
+					<label for="slct_MakeUpdate" id="lbl_makeupdate"></label>
+					<select name="slct_MakeUpdate" id="slct_MakeUpdate" data-theme="c">
+					</select>
+				</form>
+				<form data-ajax="false" onsubmit="partnumberupdate(event)">
+					<label for="txt_PartnumberUpdate" id="lbl_partnumberupdate"></label>
+					<input type="text" name="txt_PartnumberUpdate" id="txt_PartnumberUpdate"/>
+				</form>
+				<form data-ajax="false" onsubmit="customerrefupdate(event)">
+					<label for="txt_CustomerRefUpdate" id="lbl_customerrefupdate"></label>
+					<input type="text" name="txt_CustomerRefUpdate" id="txt_CustomerRefUpdate"/>
+				</form>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_MakeUpdate">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_PartnumberUpdate">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-id="mainBar" data-tap-toggle="false">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- aanpassen van een item in itemmapping -->
+	
+	<div data-role="page" id="items">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_MappingList"></h1>
+			<a data-role="button" id="btn_ScanNewItem" data-icon="plus" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content" >
+			<div id="wrapper1" class="wrapper">
+				<div id="scroller1" class="scroller">
+					<ul data-role="listview" id="lstvw_Items"></ul>
+				</div>
+			</div>
+			<!-- <input type="button" id="btn_SetItemmapping" data-icon="gear"></a> -->
+			<div data-role="popup" data-theme="a" data-position-to="origin" class="ui-content" id="popup_ItemRemoved">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" class="ui-state-persist" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>	
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="itemdetail" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_ItemInfo"></h1>
+			<a href="#" data-icon="arrow-l" class="ui-btn-left" data-rel="back" data-theme="e"></a>
+		</div>
+		<div id="wrapper5">
+		<div data-role="content" id="scroller5">
+			<table id="iteminfo"></table>
+			<ul data-role="listview" data-inset="true">
+				<li>
+					<a id="btn_UpdateItemInfo"></a>
+				</li>
+				<li>
+					<a id="btn_DeleteItem"></a>
+				</li>
+			</ul>
+		</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!--  detail van de gemapte items -->
+	
+	<div data-role="page" id="barcodemappinginvoer" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_MappingInsert"></h1>
+			<a data-role="button" id="btn_NextBarcode" data-icon="arrow-r" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<p id="codedisplay"></p>
+			<a href="#barcodemappinginvoer" data-role="button" onclick="app.scan()">Scan</a>
+ 			<input type="text" name="txt_BarcodeForMapping" id="txt_BarcodeForMapping" readonly="readonly"/>
+ 			<div data-role="popup" data-theme="a" class="ui-content" id="popup_MappingEmpty">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+	</div>
+	
+	<!-- scannen van barcode per barcode voor de mapping --><div data-role="page" id="barcodemapping" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_Mapping"></h1>
+			<a data-role="button" id="btn_ConfirmMapping" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<ul data-role="listview" data-inset="true" id="lstvw_Mapping"></ul>
+		</div>
+	</div> <!--  bevestigen van de mapping -->
+	
+	<div data-role="page" id="settings" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_settings"></h1>
+		</div>
+		<div data-role="content" >
+			<ul data-role="listview" data-inset="true">
+				<li><a id="btn_UserData"></a></li>
+				<li><a id="btn_setscanmode"></a></li>
+				<li><a id="btn_SortMapping"></a></li>
+				<li><a id="btn_GetMakeList"></a></li>
+			</ul>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_ScanUpdate">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_SortUpdate">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>	
+						<a data-role="button" href="#settings" data-icon="gear" class="ui-state-persist" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div> <!-- optiespagina -->
+	
+	<div data-role="page" id="scansettings" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_scansettings"></h1>
+			<a data-role="button" id="btn_SetScanOption" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				<p id="lgnd_scansetting"></p>
+				<fieldset data-role="controlgroup">
+					<input type="radio" name="scanoptie" id="optieCamera" value="optieCamera" />
+					<label for="optieCamera" id="lbl_smartphonecamera"></label>
+					<input type="radio" name="scanoptie" id="optieManueel" value="optieManueel"/>
+					<label for="optieManueel" id="lbl_Manual"></label>
+					<input type="radio" name="scanoptie" id="optiecode" value="optiecode"/>
+					<label for="optiecode" id="lbl_optioncode"></label>
+					<input type="radio" name="scanoptie" id="optieBluetooth" value="optieBluetooth"/>
+					<label for="optieBluetooth" id="lbl_optionbluetooth"></label>
+				</fieldset>	
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- opties voor het scannen -->
+	
+	<div data-role="page" id="sorteringinstellen" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_Sort"></h1>
+			<a data-role="button" id="btn_SetSortOption" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				<p id="lgnd_Sort"></p>
+				<fieldset data-role="controlgroup">
+					<input type="radio" name="sorteeroptie" id="sorteermake" value="sorteermake"/>
+					<label for="sorteermake" id="lbl_MakeSort"></label>
+					<input type="radio" name="sorteeroptie" id="sorteerpartnumber" value="sorteerpartnumber"/>
+					<label for="sorteerpartnumber" id="lbl_PartnumberSort"></label>
+				</fieldset>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>	
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="taalinstelling" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left"></a>
+			<h1 id="header_LanguageSetting"></h1>
+			<a data-role="button" id="btn_SetLanguageOption" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				<p id="lgnd_language"></p>
+				<fieldset data-role="controlgroup">
+					<input type="radio" name="taalkeuze" id="nl" value="nl"/>
+					<label for="nl" id="lbl_nl"></label>
+					<input type="radio" name="taalkeuze" id="fr" value="fr"/>
+					<label for="fr" id="lbl_fr"></label>
+					<input type="radio" name="taalkeuze" id="en" value="en"/>
+					<label for="en" id="lbl_en"></label>
+				</fieldset>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="gegevens" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left"></a>
+			<h1 id="header_UserData"></h1>
+			<a data-role="button" id="btn_SetUserData" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				<form onsubmit="gebruikersnaamform(event)">
+					<label for="txt_UserName" id="lbl_Username"></label>
+					<input type="text" id="txt_UserName" name="txt_UserName"/>
+				</form>
+				<form onsubmit="bedrijfsform(event)">
+					<label for="txt_Company" id="lbl_Company"></label>
+					<input type="text" id="txt_Company" name="txt_Company"/>
+				</form>
+				<form onsubmit="klantnummerform(event)">
+					<label for="txt_ClientCode" id="lbl_ClientCode"></label>
+					<input type="text" id="txt_ClientCode" name="txt_ClientCode"/>
+				</form>
+				<form onsubmit="paswoordform(event)">
+					<label for="txt_Password" id="lbl_Password"></label>
+					<input type="password" id="txt_Password" name="txt_Password"/>
+				</form>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_Username">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_Company">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_Password">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_ClientCode">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- gegevens gebruikers -->
+	
+	<div data-role="page" id="gegevensweergave" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<a href="#" data-icon="arrow-l" data-rel="back" class="ui-btn-left" data-theme="e"></a>
+			<h1 id="header_UserDataInfo"></h1>
+		</div>
+		<div data-role="content">
+			<p id="gebruikersinfo"></p>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top">Settings</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div> <!-- weergeven van gebruikersgegevens als die al bestaan -->
+	
+	<div data-role="page" id="scanasyougo" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_scanasyougo"></h1>
+			<a data-role="button" id="btn_ConfirmItemSAYG" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content" >
+			<div data-role="fieldcontain">
+					<label for="txt_BarcodeInsertSAYG" id="lbl_barcodeinsertsayg"></label>
+					<input type="number" name="txt_BarcodeInsertSAYG" id="txt_BarcodeInsertSAYG" />
+					<form data-ajax="false" onsubmit="makeSAYGSubmit(event)"> 
+						<label for="slct_MakeInsertSAYG" id="lbl_makeinsertsayg"></label>
+						<select name="slct_MakeInsertSAYG" id="slct_MakeInsertSAYG" data-theme="c">
+						</select> 
+					</form>
+					<form data-ajax="false" onsubmit="partnumberSAYGSubmit(event)">
+						<label for="txt_PartnumberInsertSAYG" id="lbl_partnumbersayg"></label>
+						<input type="text" name="txt_PartnumberInsertSAYG" id="txt_PartnumberInsertSAYG"/>
+					</form>
+					<form data-ajax="false" onsubmit="customerrefSAYGSubmit(event)">
+						<label for="txt_CustomerRefInsertSAYG" id="lbl_customerrefinsertsayg"></label>
+						<input type="text" name="txt_CustomerRefInsertSAYG" id="txt_CustomerRefInsertSAYG"/>
+					</form>
+				</div>
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_MakeSAYG" >
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div> 
+				<div data-role="popup" data-theme="a" class="ui-content" id="popup_PartnumberSAYG" >
+					<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+				</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="exporteer" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_export"></h1>
+			<a data-role="button" id="btn_ConfirmExport" data-icon="check" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				Barcode: <p id="barcodevoorexport"></p>
+				<form data-ajax="false" onsubmit="aantalexportSubmit(event)">
+					<label for="txt_ExportAmount" id="lbl_ExportAmount"></label>
+					<input type="number" name="txt_ExportAmount" id="txt_ExportAmount"/>
+				</form>
+				<form data-ajax="false" onsubmit="selectboxSubmit(event)">
+					<label for="slct_Lists" id="lbl_ListSelect"></label>
+					<select name="slct_Lists" id="slct_Lists" data-theme="c">
+					</select>
+				</form>
+			</div>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_Export">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed" data-tap-toggle="false" data-id="mainBar">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a data-role="button" href="#main" data-icon="home" data-iconpos="top"><label class="footer_main"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#mylists" data-icon="grid" data-iconpos="top"><label class="footer_mylists"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#items" data-icon="info" data-iconpos="top"><label class="footer_mapping"></label></a>
+					</li>
+					<li>
+						<a data-role="button" href="#settings" data-icon="gear" data-iconpos="top"><label class="footer_Settings"></label></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- exporteren van item in lijst naar andere lijst -->
+	
+	<div data-role="page" id="itemmappingmanueel" data-position="fixed">
+		<div data-role="header" data-tap-toggle="false" data-theme="a" data-position="fixed">
+			<h1 id="header_MappingManually"></h1>
+			<a data-role="button" id="btn_NextBarcodeManuall" data-icon="arrow-r" class="ui-btn-right" data-theme="e"></a>
+		</div>
+		<div data-role="content">
+			<p id="codedisplaymanueel"></p>
+			<input type="number" name="txt_BarcodeMappingManual" id="txt_BarcodeMappingManual"/>
+			<div data-role="popup" data-theme="a" class="ui-content" id="popup_MappingManuallyEmpty">
+				<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			</div>
+		</div>
+	</div><!-- manueel invoeren van de barcodes -->
+	
+	<div data-role="page" id="dummypage" data-position="fixed"></div>
+	
+	<script type="text/javascript">
+            app.initialize();
+    </script>    
+</body>
+</html>
